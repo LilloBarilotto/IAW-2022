@@ -1,7 +1,7 @@
 let books = [
     {
         id : 1,
-        title : "Kittemu",
+        title : "Idk really",
         author : "rt",
         date : dayjs("2000-11-02"),
         review : 3
@@ -59,7 +59,7 @@ const delayRelease = function(n, books){
 
 let libropresente = {
         id : 1,
-        title : "Kittemu",
+        title : "Idk really with diff title but same id",
         author : "rt",
         date : dayjs("2000-02-11"),
         review : 3
