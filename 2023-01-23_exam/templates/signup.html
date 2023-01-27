@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Registrati{% endblock %}
+{% block signup_active %}active{% endblock %}
+
+{% block content %}
+<main id="main-mylist" class="d-flex flex-row justify-content-center">
+    <div class="col-xl-5 col-md-6 bg-dark p-4 rounded text-white">
+        <form action="/signup" method="POST" enctype="multipart/form-data">
+            <label for="usernameInput" class="form-label">Username</label>
+            <div class="input-group mb-3">
+                <span class="input-group-text">@</span>
+                <input type="text" class="form-control" name="username" id="usernameInput" required minlength="5"
+                    maxlength="20">
+            </div>
+            <div class="mb-3">
+                <label for="firstnameInput" class="form-label">Firstname</label>
+                <input type="text" class="form-control" name="firstname" id="firstnameInput" required minlength="5"
+                    maxlength="20">
+            </div>
+            <div class="mb-3">
+                <label for="surnameInput" class="form-label">Surname</label>
+                <input type="text" class="form-control" name="surname" id="surnameInput" required minlength="5"
+                    maxlength="20">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Email address</label>
+                <input type="email" class="form-control" name="email" id="exampleInputEmail1"
+                    aria-describedby="emailHelp" required>
+                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+            </div>
+            <div class="mb-3">
+                <label for="passwordInput" class="form-label">Password</label>
+                <input type="password" class="form-control" name="password" id="passwordInput" required minlength="5"
+                    maxlength="20" aria-describedby="passwordHelpBlock">
+                <div id="passwordHelpBlock" class="form-text">
+                    Your password must be 5-20 characters long.
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="imgInput" class="form-label">Image of profile</label>
+                <input type="file" class="form-control" name="img_profile" id="imgInput" required>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="isCreator" id="flexRadioDefault1" value="1">
+                <label class="form-check-label" for="flexRadioDefault1">
+                    Register me as a CONTENT CREATOR YEAH
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="isCreator" id="flexRadioDefault2" value="0" checked>
+                <label class="form-check-label" for="flexRadioDefault2">
+                    Register me as a listener only
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Sign up</button>
+        </form>
+    </div>
+    {% endblock %}

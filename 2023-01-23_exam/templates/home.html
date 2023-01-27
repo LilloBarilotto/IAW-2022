@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block home_active %} active {% endblock %}
+
+{% block filter %}
+<div>
+<div class="input-group">
+  <input type="text" id="titleFilter" class="form-control" placeholder="Search by title" aria-describedby="basic-addon2">
+  <span class="bg-black text-white border-0 input-group-text" id="basic-addon2"><i class="bi bi-search"></i></span>
+</div>
+</div>
+{% endblock %}
+
+{% block navbar_item %}
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Category
+  </a>
+  <ul class="dropdown-menu bg-dark" id="filter-category" aria-labelledby="navbarDropdown">
+    <li><a class="dropdown-item text-white" href="#" data-value="-1">All</a></li>
+    <li><hr class="dropdown-divider"></li>
+    {% for category in categories %}
+    <li><a class="dropdown-item text-white" href="#" data-value="{{category.id}}">{{category.title}}</a></li>
+    {% endfor %}
+  </ul>
+</li>
+{% if current_user.is_creator == 1 %}
+<li class="nav-item">
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+  Create a New PodCast!
+</button>
+<div class="modal fade" id="createModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered text-dark">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-dark">Create a new podcast!</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/serie/new" method="POST" enctype="multipart/form-data">
+        <div class="modal-body ">
+          <fieldset disabled>
+            <div class="mb-3">
+              <label for="usernameTextInput" class="form-label">Username</label>
+              <input type="text" id="usernameTextInput" name="username" class="form-control"
+                value="@{{current_user.username}}">
+            </div>
+          </fieldset>
+          <div class="mb-3">
+            <label for="postTextarea" class="form-label">Define a title for the podcast</label>
+            <textarea class="form-control" id="postTextarea" name="title" rows="3"
+              placeholder="Insert here a title for the podcast" required minlength="5" maxlength="60"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="postTextarea" class="form-label">Describe the topic</label>
+            <textarea class="form-control" id="postTextarea" name="description" rows="3"
+              placeholder="Insert a description here" required minlength="30" maxlength="300"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="imageFile" class="form-label">Add an image!</label>
+            <input class="form-control" name="img_serie" type="file" id="imageFile" required>
+          </div>
+          <div class="mb-3">
+            <select class="form-select form-select-lg mb-3" name="category" aria-label=".form-select-lg example"
+              required>
+              <option selected>Open this select menu</option>
+              {% for category in categories%}
+              <option value="{{category.id}}">{{category.title}}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Create new podcast!</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</li>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<main id="main-mylist" class="col">
+<section id="list-series" class="container">
+  <div>
+    <h2>All PodCast here</h2>
+  </div>
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
+    {% for serie in series %}
+    <div class="col podcast" data-value="{{serie.category_id}}">
+      <article class="card text-bg-dark h-100">
+        <img src="{{ url_for('static', filename= 'serie/' + serie.img_path ) }}" class="card-img-top"
+          alt="Image about the serie {{serie.title}}">
+          {% if current_user.is_authenticated %}  
+          {% if serie.id in fav_series|map(attribute="serie_id") %}
+          <form action="/favorite/del" method="POST">
+            <div class="mb-3">
+              <input type="hidden" name="serie_id" value="{{ serie.id }}" />
+              <button type="submit" class="btn btn-outline-danger fav-button btn-sm">Del favorite</button>
+            </div>
+          </form>
+          {% else %}
+          <form action="/favorite/new" method="POST">
+            <div class="mb-3">
+              <input type="hidden" name="serie_id" value="{{ serie.id }}" />
+              <button type="submit" class="btn btn-outline-success fav-button btn-sm">Add favorite</button>
+            </div>
+          </form>
+          {% endif %}
+          {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{serie.title}}</h5>
+          <p class="card-text">{{serie.description}}</p>
+          <a href="{{url_for('single_serie', serie_id=serie.id)}}" class="stretched-link"></a>
+          {# this a "stretched-link" is responsible for an entire area that send the user into the serie without strange color link to all card #}
+        </div>
+      </article>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+</main>
+{% endblock %}
+
+{% block script %}
+<script defer src="{{url_for('static', filename='home.js')}}"></script>
+{% endblock %}

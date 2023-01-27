@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %} Account overview{% endblock %}
+
+
+{% block content%}
+<main id="main-mylist" class="col">
+    <article>
+        <section id="account_overview" class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-12 rounded bg-dark m-2">
+                    <h2>Profile Picture</h2>
+                    <img class="w-100 pb-2" src="{{ url_for('static', filename= 'user/' + current_user.img_path ) }}"
+                        alt="Image about the user {{current_user.username| e}}">
+                </div>
+                <div class="col-lg-8 col-md-6 col-sm-12 rounded bg-dark m-2">
+                    <h2> User Detail</h2>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-3">
+                                <p class="fs-3 fw-semibold">Username:</p>
+                            </div>
+                            <div class="col-9">
+                                <p class="fs-3 fst-italic">{{current_user.username}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3">
+                                <p class="fs-3 fw-semibold">Firstname:</p>
+                            </div>
+                            <div class="col-9">
+                                {% if current_user.firstname |length> 0 %}
+                                <p class="fs-3 fst-normal"> {{current_user.firstname}} </p>
+                                {% else %}
+                                <p class="fs-3 fst-italic "> No firstname registered </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3">
+                                <p class="fs-3 fw-semibold">Username:</p>
+                            </div>
+                            <div class="col-9">
+                                {% if current_user.surname |length > 0 %}
+                                <p class="fs-3 fst-normal"> {{current_user.surname}} </p>
+                                {% else %}
+                                <p class="fs-3 fst-italic "> No surname registered </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3">
+                                <p class="fs-3 fw-semibold">Email:</p>
+                            </div>
+                            <div class="col-9">
+                                <p class="fs-3 fst-normal">{{current_user.email}}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-3">
+                                <p class="fs-3 fw-semibold">Type of user:</p>
+                            </div>
+                            <div class="col-9">
+                                {% if current_user.is_creator == 1 %}
+                                <p class="fs-3 fst-normal"> Creator </p>
+                                {% else %}
+                                <p class="fs-3 fst-italic "> Only listener</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+        <section id="list-fav-serie" class="container">
+            <div>
+                <h2>Your favorite Podcast list</h2>
+            </div>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5 g-4">
+                {% for serie in series %}
+                <div class="col podcast" value="{{serie.category_id}}">
+                    <article class="card text-bg-dark h-100">
+                        <img src="{{ url_for('static', filename= 'serie/' + serie.img_path ) }}" class="card-img-top"
+                            alt="Image about the serie {{serie.title}}">
+                        <form action="/favorite/del" method="POST">
+                            <div class="mb-3">
+                                <input type="hidden" name="serie_id" value="{{ serie.id }}" />
+                                <button type="submit" class="btn btn-outline-danger fav-button btn-sm">Del
+                                    favorite</button>
+                            </div>
+                        </form>
+                        <div class="card-body">
+                            <h5 class="card-title">{{serie.title}}</h5>
+                            <p class="card-text">{{serie.description}}</p>
+                            <a href="{{url_for('single_serie', serie_id=serie.id)}}" class="stretched-link"></a>
+                        </div>
+                    </article>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </article>
+</main>
+{% endblock %}

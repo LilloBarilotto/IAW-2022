@@ -1,0 +1,78 @@
+body {
+  padding-top: 6rem;
+  background-color: #181818;
+}
+
+.usrimg {
+  display: inline;
+  height: 60px;
+  vertical-align: middle;
+  margin: 0.2rem 0.2rem 0.2rem 0.2rem;
+}
+
+.mynavbar {
+  background-color: #121212;
+  height: 6rem;
+}
+
+.hide {
+  display: none !important;
+}
+
+.card-text {
+  -webkit-line-clamp: 3;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+
+.fav-button {
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+  z-index: 999;
+}
+
+
+/*Added because there are problem between modal and fixed-top */
+/*see more here https://weblog.west-wind.com/posts/2016/sep/14/bootstrap-modal-dialog-showing-under-modal-background */
+.modal {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-backdrop {
+  position: relative;
+  z-index: 999 !important;
+}
+
+
+/*Hover on card*/
+.card,
+.list-item-episode{
+  transition: transform 0.2s ease;
+  box-shadow: 0 4px 6px 0 rgba(22, 22, 26, 0.18);
+  border-radius: 0;
+  border: 0;
+  margin-bottom: 1.5em;
+}
+
+
+.card:hover {
+  transform: scale(1.05);
+  -webkit-filter: brightness(115%);
+}
+
+.list-item-episode:hover {
+  transform: scale(1.02);
+  -webkit-filter: brightness(115%);
+}
+
+/* Resolve problem when hover on selected dropdown-item of category dark background with text dark */
+.bg-dark>li>a:hover {
+  color: black !important;
+}
+
+#navbarSupportedContent {
+  background-color: #121212;
+} 

@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block home_active %}active{% endblock %}
+
+{% block filter %}
+<div>
+  <div class="input-group">
+    <input type="text" id="titleEpFilter" class="form-control" placeholder="Search by title" aria-describedby="basic-addon2">
+    <span class="bg-black text-white border-0 input-group-text" id="basic-addon2"><i class="bi bi-search"></i>
+  </div>
+
+  <div class="input-group">
+    <input type="text" id="descriptionEpFilter" class="form-control" placeholder="Search by description" aria-describedby="basic-addon2">
+    <span class="bg-black text-white border-0 input-group-text" id="basic-addon2"><i class="bi bi-search"></i>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block navbar_item %}
+{% if current_user.is_creator == 1 and current_user.id == serie.user_id %}
+<li class="nav-item">
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+    Create a New Episode!
+  </button>
+  <div class="modal fade" id="createModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered text-dark">
+      <div class="modal-content text-dark">
+        <div class="modal-header text-dark">
+          <h1 class="modal-title fs-5">Create a new episode!</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="/episode/new" method="POST" enctype="multipart/form-data">
+          <div class="modal-body">
+            <fieldset disabled>
+              <div class="mb-3">
+                <label for="usernameTextInput" class="form-label">Username</label>
+                <input type="text" id="usernameTextInput" name="username" class="form-control"
+                  value="@{{current_user.username | e}}">
+              </div>
+            </fieldset>
+            <div class="mb-3">
+              <label for="postTextarea" class="form-label">Define a title for the episode</label>
+              <textarea class="form-control" id="postTextarea" name="title" rows="3"
+                placeholder="Insert here a title for the episode" required minlength="5" maxlength="200"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="postTextarea" class="form-label">Describe the topic of the episode</label>
+              <textarea class="form-control" id="postTextarea" name="description" rows="3"
+                placeholder="Insert a description here" required minlength="30" maxlength="200"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="audioFile" class="form-label">Add an audio for the episode!</label>
+              <input class="form-control" name="audio_episode" type="file" id="audioFile" required accept="audio/*">
+            </div>
+            <div class="mb-3">
+              <label for="dateTextInput" class="form-label">Select pubblication date</label>
+              <input class="form-control" type="date" name="posted_at" id="dateTextInput" required>
+            </div>
+            <div class="mb-3 hide">
+              <label for="serieIdTextInput" class="form-label">Serie Id</label>
+              <input type="text" id="serieIdTextInput" name="serie_id" class="form-control" value="{{serie.id | e}}">
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Create new episode!</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</li>
+<li class="nav-item">
+  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#createModalDeleteSerie">
+    Delete the Serie!
+  </button>
+  <div class="modal fade" id="createModalDeleteSerie" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered text-dark">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Are you sure? You want to delete the serie?</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="/serie/del" method="POST" enctype="multipart/form-data">
+          <div class="modal-body hide">
+            <div class="mb-3 hide">
+              <label for="serieIdTextInput" class="form-label">Serie Id</label>
+              <input type="text" id="serieIdTextInput" name="serie_id" class="form-control" value="{{serie.id | e}}">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">NO go back</button>
+            <button type="submit" class="btn btn-danger">YES delete the serie!</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</li>
+{% endif %}
+{% endblock %}
+
+<!-- MOSTRA SERIE-->
+{% block content %}
+<main id="main-mylist">
+  <article class="p-2 mx-3">
+    <section id="serie-introduction">
+      <div class="mb-5 container">
+        <div class="row">
+          <div class="col-lg-4 col-md-6 col-sm-12">
+            <h1>"{{serie.title | e}}"</h1>
+          </div>
+          <div class="col-lg-8 col-md-6 col-sm-12 d-inline-flex align-items-center">
+            <img class="usrimg rounded-circle" src="{{ url_for('static', filename= 'user/' +serie.user_img_path ) }}"
+              alt="Questa è l'immagine dell'utente {{ serie.username |e }}">
+            <p class="fs-3">Created by</p>
+            <p class="ms-1 fs-3 fst-italic username">@{{ serie.username |e }}</p>
+            <p class="flex-grow-1 text-end">Created at {{ serie.created_at |e }}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-4 col-md-6 col-sm-12">
+            <img class="w-100 p-2" src="{{ url_for('static', filename= 'serie/' + serie.img_path ) }}"
+              alt="Image about the serie {{serie.title | e}}">
+          </div>
+          <div class="col-lg-8 col-md-6 col-sm-12 rounded bg-dark">
+            <p class="fs-2">About the serie:</p>
+            <p class="fs-3 fst-italic">{{ serie.description |e }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="serie-episodes">
+      <div class="list-group container">
+        <h2>All episodes here!</h2>
+        {% for episode in episodes %}
+        {# String comparison between date because idk because miscellanous between jinja and python... idk... #}
+        {% if datetoday >= episode.posted_at or current_user.id == serie.user_id %}
+        <a href="{{url_for('single_episode', episode_id=episode.id)}}"
+          class="episode list-group-item list-group-item-action list-item-episode bg-dark text-white">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1  episode-title text-truncate">Title: "{{episode.title | e}}"</h5>
+            <p> Posted at {{episode.posted_at | e}}</p>
+          </div>
+          <p class="mb-1 text-truncate episode-description">{{episode.description | e}}</p>
+          {% if current_user.is_authenticated %}
+          <audio controls class="mw-100">
+            <source src="{{ url_for('static', filename = 'episode/' + episode.audio_path)}}" type="audio/mp3">
+          </audio>
+          {% else %}
+          <audio controls class="audio-pls-signin mw-100">
+            <source src="" type="audio/mp3">
+          </audio>
+          {% endif %}
+        </a>
+        {% endif %}
+        {% endfor%}
+      </div>
+    </section>
+  </article>
+  {% if not current_user.is_authenticated %}
+  <div class="modal fade" id="createModalSignIn" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered text-dark">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Ehi you want listen something.. Sign in to unlock this feature</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="/login" method="GET" enctype="multipart/form-data">
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">NO go back</button>
+            <button type="submit" class="btn btn-primary">Sign in</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</main>
+{% endblock %}
+
+{% block script %}
+<script defer src="{{url_for('static', filename='serie.js')}}"></script>
+{% endblock %}

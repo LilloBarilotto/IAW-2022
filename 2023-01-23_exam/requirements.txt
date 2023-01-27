@@ -1,0 +1,5 @@
+pip install bootstrap-flask
+pip install Flask-Session
+pip install flask-login
+pip install werkzeug
+pip install Pillow

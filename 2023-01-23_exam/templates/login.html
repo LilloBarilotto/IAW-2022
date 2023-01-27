@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block login_active %}active{% endblock %}
+
+{% block content %}
+<main id="main-mylist" class="d-flex row justify-content-center">
+    <div class="col-xl-6 col-8 bg-dark p-4 rounded text-white">
+        <form action="/login" method="POST">
+            <div class="mb-3">
+                <label for="InputEmail1" class="form-label">Email address</label>
+                <input type="email" class="form-control" name="email" id="InputEmail1" required>
+            </div>
+            <div class="mb-3">
+                <label for="passwordInput" class="form-label">Password</label>
+                <input type="password" class="form-control" id="passwordInput" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Log in</button>
+        </form>
+    </div>
+</main>
+{% endblock %}

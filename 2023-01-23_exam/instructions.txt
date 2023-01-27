@@ -1,0 +1,51 @@
+CREDENZIALI DI ACCESSO
+
+Creator
+email: lillo@gmail.com
+psw: lillo
+
+email: antonio@gmail.com
+psw: antonio
+
+
+Listener:
+email: peretto@gmail.com
+psw: peretto
+
+-------------------
+MODI PER TESTARE IL SITO
+Home
+    -Ricerca titolo case insensitive
+    -button preferiti appare solo se utente loggato
+    -cancellare preferito da home riporta in home
+    -descrizione limitata a tre righe in base alla visualizzazione
+    -Mostra per categoria, presa da DB
+
+Serie
+    -Ricerca per titolo e/o descrizione
+    -Mostra creatore del contenuto
+    -Vengono mostrati solo gli episodi fino alla data odierna, se son stati caricati episodi futuri li può vedere dalla pagina della serie solo il creatore
+    -inserimento episodio da parte del creatore, se data inferiore a quella odierna non permesso
+    -cancellazione serie se creatore
+    -Audio disabilito se non loggato
+
+Episode
+    -Mostra episodio
+    -cancella episodio se creatore
+    -Inserimento commento
+    -Mostra commenti
+    -Cancellazione commento se personale
+    -Data dei commenti gestita attraverso dayjs e plugin RelativeTime
+    -Audio disabilitato se non loggato
+
+Profilo
+    -Mostra dati inseriti dall'utente alla registrazione
+    -Mostra serie preferite dell'utente
+    -cancellare preferito da Profilo riporta in profilo
+
+Gestione errori
+    -Cercare un link per contenuti non esistenti porta a pagina personalizzata
+    -Forzare un comando per cui non abbiamo i diritti attraverso un url riporta a una pagina personalizzata
+
+Altro
+    -Cancellazione ON DELETE CASCADE prevista nel caso di cancellazione serie ed episodi

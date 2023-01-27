@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block title %}Ep - {{episode.title}}{% endblock %}
+
+{% block navbar_item %}
+{% if current_user.is_creator == 1 and current_user.id == episode.user_id %}
+<li class="nav-item">
+  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#createModalDeleteSerie">
+    Delete the Episode!
+  </button>
+  <div class="modal fade" id="createModalDeleteSerie" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered text-dark">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Are you sure? You want to delete the episode?</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="/episode/del" method="POST" enctype="multipart/form-data">
+          <div class="modal-body hide">
+            <div class="mb-3 hide">
+              <label for="episodeIdTextInput" class="form-label">Episode Id</label>
+              <input type="text" id="episodeIdTextInput" name="episode_id" class="form-control"
+                value="{{episode.id | e}}">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">NO go back</button>
+            <button type="submit" class="btn btn-danger">YES delete the episode!</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</li>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<main id="main-mylist" class="col">
+  <article class="row p-2 mx-2 my-2 text-white d-flex justify-content-center">
+    <section id="episode-introduction">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4 col-md-6 col-sm-12">
+            <img class="w-100 p-2" src="{{ url_for('static', filename= 'serie/' + episode.img_path ) }}"
+              alt="Image about the serie {{episode.serie_title | e}}">
+          </div>
+          <div class="col-lg-8 col-md-6 col-sm-12 rounded bg-dark ">
+            <div class="row d-flex justify-content-between">
+              <p class="fs-3 col-lg-8 col-12 episode-title ">Title: "{{episode.title | e}}"</p>
+              <p class="fs-5 col-auto"> Posted at {{episode.posted_at | e}}</p>
+            </div>
+            <div class="row">
+              <p class="fs-3">Description:</p>
+              <p class="fs-4 fst-italic">{{ episode.description |e }}</p>
+            </div>
+            <div class="row  align-items-end mb-1">
+              {% if current_user.is_authenticated %}
+              <audio controls class="mw-100">
+                <source src="{{ url_for('static', filename = 'episode/' + episode.audio_path)}}" type="audio/mp3">
+              </audio>
+              {% else %}
+              <audio controls class="audio-pls-signin mw-100">
+                <source src="" type="audio/mp3">
+              </audio>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container-comments">
+      <div class="container my-2 py-5">
+        <div class="row d-flex justify-content-center">
+          <div class="col-md-12 col-lg-9 bg-dark rounded">
+            <h4 class="pt-1 mb-0">All Comments</h4>
+            {% if current_user.is_authenticated %}
+            <hr class="border">
+            <form action="/comment/new" method="POST">
+              <div class="mb-3 d-flex flex-start">
+                <img class="rounded-circle shadow-1-strong me-3 usrimg"
+                  src="{{ url_for('static', filename= 'user/' + current_user.img_path ) }}"
+                  alt="Questa è l'immagine dell'utente {{ current_user.username |e }}">
+                <textarea class="form-control" id="testoInput" rows="3" placeholder="New comment..."
+                  name="content"></textarea>
+                <input type="hidden" name="episode_id" value="{{ episode.id }}" />
+              </div>
+              <div class="m-2 text-end">
+                <button type="submit" class="btn btn-success btn-sm">Invia</button>
+              </div>
+            </form>
+            {% endif %}
+            {% for comment in comments %}
+            <hr />
+            <div class="row">
+              <div class="col-auto">
+                <img class="rounded-circle shadow-1-strong me-3 usrimg"
+                  src="{{ url_for('static', filename= 'user/' + comment.user_img_path ) }}"
+                  alt="Questa è l'immagine dell'utente {{ comment.username |e }}">
+              </div>
+              <div class="col">
+                <div class="row">
+                  <div class="col d-flex flex-start">
+                    <p class="fs-5 fw-bold">{{ comment.username |e }}</p>
+                    {% if current_user.is_authenticated and current_user.username == comment.username %}
+                    <form action="/comment/del" method="POST">
+                      <div class="mb-3">
+                        <input type="hidden" name="comment_id" value="{{ comment.id }}" />
+                        <div class="ms-2 text-end">
+                          <button type="submit" class="btn btn-danger btn-sm">Delete comment</button>
+                        </div>
+                      </div>
+                    </form>
+                    {% endif %}
+                  </div>
+                  <div class="col">
+                    <p class="ms-auto comment-date text-end">{{ comment.posted_at |e }}</p>
+                  </div>
+                </div>
+                <div class="row">
+                  <p class="pb-1 comment-content">
+                    {{ comment.content |e }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+  </article>
+</main>
+{% endblock %}
+
+
+{% block script %}
+<script defer src="{{url_for('static', filename='episode.js')}}"></script>
+{% endblock %}
